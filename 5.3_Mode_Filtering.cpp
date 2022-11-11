@@ -7,49 +7,21 @@ using namespace std;
 
 int findMode(int arr[], int n)
 {
-	//finding max frequency  
-	int max_count = 1, res = arr[0], count = 1;
-	for (int i = 1; i < n; i++) {
-		if (arr[i] == arr[i - 1])
-			count++;
-		else {
-			if (count > max_count) {
-				max_count = count;
-				res = arr[i - 1];
-			}
-			count = 1;
-		}
-	}
+      int maxValue = 0, maxCount = 0, i, j;
 
-	// when the last element is most frequent 
-	if (count > max_count)
-	{
-		max_count = count;
-		res = arr[n - 1];
-	}
+      for (i = 0; i < n; ++i) {
+         int count = 0;
+         for (j = 0; j < n; ++j) {
+            if (arr[j] == arr[i])
+            ++count;
+         }
 
-	return res;
-}
-
-void insertionSort(int arr[], int n)
-{
-	int i, key, j;
-	for (i = 1; i < n; i++)
-	{
-		key = arr[i];
-		j = i - 1;
-
-		// Move elements of arr[0..i-1], 
-		// that are greater than key, to one
-		// position ahead of their
-		// current position
-		while (j >= 0 && arr[j] > key)
-		{
-			arr[j + 1] = arr[j];
-			j = j - 1;
-		}
-		arr[j + 1] = key;
-	}
+         if (count > maxCount) {
+            maxCount = count;
+            maxValue = arr[i];
+         }
+      }
+      return maxValue;
 }
 
 int main(int argc, char* argv[]) {
@@ -82,7 +54,7 @@ int main(int argc, char* argv[]) {
 	// we should write 2 for loops to reach each and every pixel of the image
 	for (int i = adj; i < image.rows - adj; i++) {
 		for (int j = adj; j < image.cols - adj; j++) {
-			// then we have to loop the kernal to store them in an array, such that they are sorted and mode value can be calculated
+			// then we have to loop the kernal to store them in an array, such that mode value can be calculated
 			index = 0;
 			for (int g = i - adj; g <= i + adj; g++) {
 				for (int h = j - adj; h <= j + adj; h++) {
@@ -90,9 +62,8 @@ int main(int argc, char* argv[]) {
 					index++;
 				}
 			}
-			insertionSort(arr, size); //sorting the values of kernal (neghbouring and pixel itself)
 			mode = findMode(arr, size);
-			output.at<uchar>(i, j) = (uchar)mode; //assigning the middle value of the sorted array -> median
+			output.at<uchar>(i, j) = (uchar)mode; //assigning the mode to the pixel
 		}
 	}
 
